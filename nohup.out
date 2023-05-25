@@ -1,0 +1,43 @@
+
+   INFO  Server running on [http://172.16.4.34:8000].  
+
+  Press Ctrl+C to stop the server
+
+  2022-11-02 10:26:10 ................................................... ~ 1s
+  2022-11-02 10:26:10 /assets/css/nucleo-icons.css ...................... ~ 1s
+  2022-11-02 10:26:11 /assets/css/nucleo-svg.css ........................ ~ 0s
+  2022-11-02 10:26:11 /assets/js/core/popper.min.js ..................... ~ 0s
+  2022-11-02 10:26:11 /assets/js/plugins/perfect-scrollbar.min.js ....... ~ 0s
+  2022-11-02 10:26:11 /assets/js/core/bootstrap.min.js .................. ~ 0s
+  2022-11-02 10:26:11 /assets/js/plugins/smooth-scrollbar.min.js ........ ~ 0s
+  2022-11-02 10:26:11 /assets/css/argon-dashboard.css ................... ~ 0s
+  2022-11-02 10:26:11 /assets/js/argon-dashboard.js ..................... ~ 0s
+  2022-11-02 10:26:11 /img/favicon.png .................................. ~ 0s
+
+   INFO  Environment modified. Restarting server...  
+
+   INFO  Server running on [http://172.16.4.34:8001].  
+
+  Press Ctrl+C to stop the server
+
+
+   INFO  Environment modified. Restarting server...  
+
+   INFO  Server running on [http://172.16.4.34:8001].  
+
+  Press Ctrl+C to stop the server
+
+
+   INFO  Environment modified. Restarting server...  
+
+   INFO  Server running on [http://172.16.4.34:8001].  
+
+  Press Ctrl+C to stop the server
+
+
+   INFO  Environment modified. Restarting server...  
+
+   INFO  Server running on [http://172.16.4.34:8001].  
+
+  Press Ctrl+C to stop the server
+
