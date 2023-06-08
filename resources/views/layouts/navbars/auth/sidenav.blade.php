@@ -59,6 +59,22 @@
                     <span class="nav-link-text ms-1">Live</span>
                 </a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link {{ Route::currentRouteName() == 'ruas' ? 'active' : '' }}" href="{{ route('ruas') }}">
+                    <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="ni ni-world-2 text-primary text-sm opacity-10"></i>
+                    </div>
+                    <span class="nav-link-text ms-1">Ruas</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ Route::currentRouteName() == 'cctv' || Route::currentRouteName() == 'tambahCctv' ? 'active' : '' }}" href="{{ route('cctv') }}">
+                    <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="ni ni-camera-compact text-primary text-sm opacity-10"></i>
+                    </div>
+                    <span class="nav-link-text ms-1">CCTV</span>
+                </a>
+            </li>
         </ul>
     </div>
 </aside>
