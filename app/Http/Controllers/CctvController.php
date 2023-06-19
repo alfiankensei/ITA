@@ -25,8 +25,22 @@ class CctvController extends Controller
             if ($regional['code'] == 200) {
                 return DataTables::of($regional['body']->list_cctv)
                     ->addIndexColumn()
+                    ->addColumn('status', function ($row) {
+                        if ($row->status == 1) {
+                            $statusBtn = 'Aktif';
+                            return $statusBtn;
+                        } else {
+                            $statusBtn = 'Tidak Aktif';
+                            return $statusBtn;
+                        }
+                    })
+                    ->rawColumns(['status'])
+                    ->addIndexColumn()
                     ->addColumn('aksi', function ($row) {
-                        $actionBtn = '<button type="button" onClick="hapus_cctv(' . $row->id . ')" id="btnHapus" class="btn btn-danger" title="Hapus CCTV"><i class="fas fa-trash mr-2"></i></button>';
+                        $actionBtn =
+                            '<button type="button" onClick="start_cctv(' . $row->id . ')" id="btnStart" class="btn btn-success" title="Start Service CCTV"><i class="fas fa-circle-play mr-2"></i></button>' .
+                            '<button type="button" onClick="stop_cctv(' . $row->id . ')" id="btnStop" class="btn btn-primary" title="Stop Service CCTV"><i class="fas fa-circle-stop mr-2"></i></button>' .
+                            '<button type="button" onClick="hapus_cctv(' . $row->id . ')" id="btnHapus" class="btn btn-danger" title="Hapus CCTV"><i class="fas fa-trash mr-2"></i></button>';
                         return $actionBtn;
                     })
                     ->rawColumns(['aksi'])
@@ -55,6 +69,34 @@ class CctvController extends Controller
 
         $data['data']    = $request['body'];
         $data['status']  = $request['code'];
+        echo json_encode($data);
+    }
+
+    // get Server AI
+    public function getServer(Request $request)
+    {
+        // get all data
+        $serve   = $request->serve;
+
+        if ($serve == 'edge') {
+            $options = [
+                'timeout'   => 120
+            ];
+
+            $request = $this->performRequestFormParams('GET', env('API_ITA_URL') . 'get_status', $options);
+
+            $data['data']    = $request['body'];
+            $data['status']  = $request['code'];
+        } else {
+            $options = [
+                'timeout'   => 120
+            ];
+
+            $request = $this->performRequestFormParams('GET', env('API_ITA_URL') . 'get_status_clients', $options);
+
+            $data['data']    = $request['body'];
+            $data['status']  = $request['code'];
+        }
         echo json_encode($data);
     }
 
@@ -405,6 +447,7 @@ class CctvController extends Controller
         $jumlah_lajur               = $request->jumlah_lajur;
         $timezone                   = $request->timezone;
         $dataset                    = $request->dataset;
+        $address                    = $request->address;
 
         $param = [
             'lokasi_cctv'           => $lokasi_cctv,
@@ -433,6 +476,7 @@ class CctvController extends Controller
             'jumlah_lajur'          => $jumlah_lajur,
             'timezone'              => $timezone,
             'dataset'               => $dataset,
+            'address'               => $address,
         ];
 
         $options = [
@@ -443,6 +487,70 @@ class CctvController extends Controller
 
         $data['data']    = $request['body'];
         $data['status']  = $request['code'];
+        echo json_encode($data);
+    }
+
+    // start cctv
+    public function startCctv(Request $request)
+    {
+        // get all data
+        $id_cctv   = $request->id;
+
+        $param = [
+            'id'    => $id_cctv
+        ];
+
+        $options = [
+            'timeout'   => 120
+        ];
+
+        $request = $this->performRequestFormParams('POST', env('API_ITA_URL') . 'get_cctv_by_id', $param, $options);
+
+        // parameter start cctv
+        $nama   = $request['body'][0]->location;
+        $ip     = $request['body'][0]->ip_address;
+        $param2 = [
+            'id'        => $id_cctv,
+            'location'  => $nama,
+            'address'   => $ip,
+        ];
+
+        $request2 = $this->performRequestFormParams('POST', env('API_ITA_URL') . 'api_start_clients', $param2, $options);
+
+        $data['data']    = $request2['body'];
+        $data['status']  = $request2['code'];
+        echo json_encode($data);
+    }
+
+    // stop cctv
+    public function stopCctv(Request $request)
+    {
+        // get all data
+        $id_cctv   = $request->id;
+
+        $param = [
+            'id'    => $id_cctv
+        ];
+
+        $options = [
+            'timeout'   => 120
+        ];
+
+        $request = $this->performRequestFormParams('POST', env('API_ITA_URL') . 'get_cctv_by_id', $param, $options);
+
+        // parameter stop cctv
+        $nama   = $request['body'][0]->location;
+        $ip     = $request['body'][0]->ip_address;
+        $param2 = [
+            'id'        => $id_cctv,
+            'location'  => $nama,
+            'address'   => $ip,
+        ];
+
+        $request2 = $this->performRequestFormParams('POST', env('API_ITA_URL') . 'api_stop_clients', $param2, $options);
+
+        $data['data']    = $request2['body'];
+        $data['status']  = $request2['code'];
         echo json_encode($data);
     }
 }

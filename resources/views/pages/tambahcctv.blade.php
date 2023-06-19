@@ -95,8 +95,6 @@
                                 <label for="conf_malam">Confidence AI Malam</label>
                                 <input type="text" class="form-control form-control-border" id="conf_malam" placeholder="Range : 0 - 1" value="0.4">
                             </div>
-                        </div>
-                        <div class="col-md-6">
                             <div class="form-group">
                                 <label for="posisi_kamera">Posisi Kamera</label>
                                 <select class="form-control form-control-border select2bs4" id="posisi_kamera" style="width: 100%;">
@@ -105,6 +103,8 @@
                                     <option value="yolov5m-20Feb23.pt">Posisi Samping</option>
                                 </select>
                             </div>
+                        </div>
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <label for="klasifikasi_car">Klasifikasi Car</label>
                                 <select class="form-control form-control-border select2bs4" id="klasifikasi_car" style="width: 100%;">
@@ -136,6 +136,20 @@
                                     <option value="WIB">WIB</option>
                                     <option value="WIT">WIT</option>
                                     <option value="WITA">WITA</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="servers">Pilih Server</label>
+                                <select class="form-control form-control-border select2bs4" id="servers" style="width: 100%;">
+                                    <option value="" selected>Pilih Server</option>
+                                    <option value="edge">Edge Computing</option>
+                                    <option value="central">Centralize</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="ip_addr">Alamat Server AI</label>
+                                <select class="form-control form-control-border select2bs4" id="ip_addr" style="width: 100%;">
+                                    <option value="" selected>Pilih Server Dulu</option>
                                 </select>
                             </div>
                             <div class="form-group">
@@ -1133,6 +1147,51 @@
         var img_pointdown_coord        = "";
         var hasil_pointdown_coord      = "";
         var hasil_pointdown_coord2     = "";
+
+        //onchange Server
+        $("#servers").change(function() {
+            var serve = $('#servers').val();
+            if (serve == '') {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Server Belum dipilih!!'
+                })
+            } else {
+                $.ajax({
+                    type: "POST",
+                    data: {
+                            "_token": "{{ csrf_token() }}",
+                            serve:serve
+                        },
+                    url: "{{ route('getServer') }}",
+                    dataType: "JSON",
+                    beforeSend: function() {
+                        $('#ip_addr').html('<option value="">Loading...</option>');
+                    },
+                    success: function(response){
+                        $('#ip_addr').html('<option value="">Pilih Alamat Server</option>');
+                        var lenData   = response.data.perangkat.length;
+                        var a;
+                        for(a=0; a<lenData; a++){
+                            var memory  = parseInt(response.data.perangkat[a].temp_free_memory);
+                            if(memory > 4000){
+                                $('#ip_addr').append('<option value="'+ response.data.perangkat[a].ip_address +'">'+ response.data.perangkat[a].ip_address +'</option>');
+                            }else{
+                                $('#ip_addr').append('<option value="">Not Found</option>');
+                            }
+                        }
+                    },error: function(textStatus, errorThrown) { 
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'gagal get Server',
+                            text: errorThrown
+                        })
+                    }
+                });
+            }
+        });
+
         // generate image awal semua notfound
         // div masking
         $("#img_awal").attr("src", img_notfound);
@@ -3806,6 +3865,7 @@
             var klasifikasi_car     = $('#klasifikasi_car').val();
             var klasifikasi_truck   = $('#klasifikasi_truck').val();
             var timezone            = $('#timezone').val();
+            var ip_addr             = $('#ip_addr').val();
 
             var formData = new FormData();
             formData.append('_token', "{{ csrf_token() }}");
@@ -3835,6 +3895,7 @@
             formData.append('jumlah_lajur', jumlah_lajur);
             formData.append('timezone', timezone);
             formData.append('dataset', posisi_kamera);
+            formData.append('address', ip_addr);
             
             if(isNaN(conf_siang) || isNaN(conf_malam)){
                 Swal.fire({
@@ -3925,6 +3986,12 @@
                     icon: 'error',
                     title: 'Oops...',
                     text: 'Jangan Lupa Pilih Timezone!!'
+                })
+            }else if(ip_addr == ''){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Jangan Lupa Pilih Alamat Server!!'
                 })
             }else{
                 Swal.fire({

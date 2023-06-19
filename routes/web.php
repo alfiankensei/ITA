@@ -48,7 +48,10 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::get('/cctv/list', [CctvController::class, 'getCctv'])->name('cctv.list');
 	Route::post('/delCctv', [CctvController::class, 'delCctv'])->name('delCctv');
 	Route::post('/saveCctv', [CctvController::class, 'saveCctv'])->name('saveCctv');
+	Route::post('/startCctv', [CctvController::class, 'startCctv'])->name('startCctv');
+	Route::post('/stopCctv', [CctvController::class, 'stopCctv'])->name('stopCctv');
 	Route::get('/tambahCctv', [CctvController::class, 'tambahCctv'])->name('tambahCctv');
+	Route::post('/getServer', [CctvController::class, 'getServer'])->name('getServer');
 	Route::post('/getFoto', [CctvController::class, 'getFoto'])->name('getFoto');
 	Route::post('/getMasking', [CctvController::class, 'getMasking'])->name('getMasking');
 	Route::post('/getSetupCoord', [CctvController::class, 'getSetupCoord'])->name('getSetupCoord');

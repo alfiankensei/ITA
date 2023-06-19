@@ -5,6 +5,7 @@
     <div class="container-fluid py-4">
         <div class="pt-4"></div>
         <div class="pt-4"></div>
+        <div class="pt-4"></div>
         <div class="container">
             <h6>Daftar CCTV</h6>
             <a class="btn btn-info" href="{{ route('tambahCctv') }}"> Tambah CCTV</a>
@@ -14,6 +15,7 @@
                         <th>No</th>
                         <th>Nama Ruas</th>
                         <th>Location CCTV</th>
+                        <th>Status CCTV</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
@@ -48,7 +50,7 @@
                 text: 'Download',
                 className: 'btn-success',
                 exportOptions: {
-                    columns: [ 0, 1, 2 ]
+                    columns: [ 0, 1, 2, 3 ]
                 }
             }],
             "processing": true,
@@ -86,6 +88,7 @@
                 {data: 'DT_RowIndex', name: 'DT_RowIndex'},
                 {data: 'ruas', name: 'ruas'},
                 {data: 'location', name: 'location'},
+                {data: 'status', name: 'status'},
                 {
                     data: 'aksi', 
                     name: 'aksi', 
@@ -106,6 +109,7 @@
         } );
     
     });
+
     //hapus cctv satu item
     function hapus_cctv(id){
         var id      = id;
@@ -215,6 +219,244 @@
                     })
                 }
     
+            })
+        }else{
+            Swal.fire({
+                type: 'error',
+                title: 'Oops...',
+                text: 'Tidak ada data terpilih!'
+            })
+        }
+    }
+
+    //start cctv satu item
+    function start_cctv(id){
+        var id      = id;
+
+        if(id > 0){
+            Swal.fire({
+                title: 'Yakin mau Start CCTV Ini ?',
+                customClass: 'swal-wide',
+                showCancelButton: true,
+                cancelButtonColor: '#d33',
+                cancelButtonText: 'Batal',
+                confirmButtonColor: '#0000cc',
+                confirmButtonText: 'Ya, Start',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.value) {
+                        $.ajax({
+                            type: "POST",
+                            data: {
+                                "_token": "{{ csrf_token() }}",
+                                id:id
+                            },
+                            url: "{{ route('startCctv') }}",
+                            dataType: "JSON",
+                            async: false,
+                            beforeSend: function() {
+                                $('body').loading();
+                            },
+                            success: function(response)
+                            {
+                                var sts     = response.data.status_id;
+                                var code    = response.status;
+                                $('body').loading('stop');
+                                if(sts == 1){
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Berhasil Start Service CCTV!',
+                                        showConfirmButton: false,
+                                        timer: 1500
+                                    })
+                                    location.href = "{{ route('cctv') }}";
+                                }else{
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Gagal!!!',
+                                        text: 'Gagal Start Service CCTV!',
+                                        showConfirmButton: false,
+                                        timer: 1500
+                                    })
+                                }
+                            },
+                            error: function(jqXHR, exception) {
+                                $('body').loading('stop');
+                                if (jqXHR.status === 0) {
+                                    Swal.fire({
+                                        type: 'error',
+                                        title: 'DATA TIDAK TER RELOAD DENGAN BAIK',
+                                        text: 'Not connect.\n Verify Network.'
+                                    })
+                                } else if (jqXHR.status == 404) {
+                                    Swal.fire({
+                                        type: 'error',
+                                        title: 'DATA TIDAK TER RELOAD DENGAN BAIK',
+                                        text: 'Requested page not found. [404]'
+                                    })
+                                } else if (jqXHR.status == 500) {
+                                    Swal.fire({
+                                        type: 'error',
+                                        title: 'DATA TIDAK TER RELOAD DENGAN BAIK',
+                                        text: 'Internal Server Error [500].'
+                                    })
+                                } else if (exception === 'parsererror') {
+                                    Swal.fire({
+                                        type: 'error',
+                                        title: 'DATA TIDAK TER RELOAD DENGAN BAIK',
+                                        text: 'Requested JSON parse failed.'
+                                    })
+                                } else if (exception === 'timeout') {
+                                    Swal.fire({
+                                        type: 'error',
+                                        title: 'DATA TIDAK TER RELOAD DENGAN BAIK',
+                                        text: 'Time out error.'
+                                    })
+                                } else if (exception === 'abort') {
+                                    Swal.fire({
+                                        type: 'error',
+                                        title: 'DATA TIDAK TER RELOAD DENGAN BAIK',
+                                        text: 'Ajax request aborted.'
+                                    })
+                                } else {
+                                    Swal.fire({
+                                        type: 'error',
+                                        title: 'DATA TIDAK TER RELOAD DENGAN BAIK',
+                                        text: 'Uncaught Error.\n' + jqXHR.responseText
+                                    })
+                                }
+                            }
+                        });
+                }else{
+                    $('body').loading('stop');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Batal delete Data CCTV!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+                }
+    
+            })
+        }else{
+            Swal.fire({
+                type: 'error',
+                title: 'Oops...',
+                text: 'Tidak ada data terpilih!'
+            })
+        }
+    }
+
+    //stop cctv satu item
+    function stop_cctv(id){
+        var id      = id;
+
+        if(id > 0){
+            Swal.fire({
+                title: 'Yakin mau Stop CCTV Ini ?',
+                customClass: 'swal-wide',
+                showCancelButton: true,
+                cancelButtonColor: '#d33',
+                cancelButtonText: 'Batal',
+                confirmButtonColor: '#0000cc',
+                confirmButtonText: 'Ya, Stop',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.value) {
+                        $.ajax({
+                            type: "POST",
+                            data: {
+                                "_token": "{{ csrf_token() }}",
+                                id:id
+                            },
+                            url: "{{ route('stopCctv') }}",
+                            dataType: "JSON",
+                            async: false,
+                            beforeSend: function() {
+                                $('body').loading();
+                            },
+                            success: function(response)
+                            {
+                                var sts     = response.data.status_id;
+                                var code    = response.status;
+                                $('body').loading('stop');
+                                if(sts == 1){
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Berhasil Stop Service CCTV!',
+                                        showConfirmButton: false,
+                                        timer: 1500
+                                    })
+                                    location.href = "{{ route('cctv') }}";
+                                }else{
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Gagal!!!',
+                                        text: 'Gagal Stop Service CCTV!',
+                                        showConfirmButton: false,
+                                        timer: 1500
+                                    })
+                                }
+                            },
+                            error: function(jqXHR, exception) {
+                                $('body').loading('stop');
+                                if (jqXHR.status === 0) {
+                                    Swal.fire({
+                                        type: 'error',
+                                        title: 'DATA TIDAK TER RELOAD DENGAN BAIK',
+                                        text: 'Not connect.\n Verify Network.'
+                                    })
+                                } else if (jqXHR.status == 404) {
+                                    Swal.fire({
+                                        type: 'error',
+                                        title: 'DATA TIDAK TER RELOAD DENGAN BAIK',
+                                        text: 'Requested page not found. [404]'
+                                    })
+                                } else if (jqXHR.status == 500) {
+                                    Swal.fire({
+                                        type: 'error',
+                                        title: 'DATA TIDAK TER RELOAD DENGAN BAIK',
+                                        text: 'Internal Server Error [500].'
+                                    })
+                                } else if (exception === 'parsererror') {
+                                    Swal.fire({
+                                        type: 'error',
+                                        title: 'DATA TIDAK TER RELOAD DENGAN BAIK',
+                                        text: 'Requested JSON parse failed.'
+                                    })
+                                } else if (exception === 'timeout') {
+                                    Swal.fire({
+                                        type: 'error',
+                                        title: 'DATA TIDAK TER RELOAD DENGAN BAIK',
+                                        text: 'Time out error.'
+                                    })
+                                } else if (exception === 'abort') {
+                                    Swal.fire({
+                                        type: 'error',
+                                        title: 'DATA TIDAK TER RELOAD DENGAN BAIK',
+                                        text: 'Ajax request aborted.'
+                                    })
+                                } else {
+                                    Swal.fire({
+                                        type: 'error',
+                                        title: 'DATA TIDAK TER RELOAD DENGAN BAIK',
+                                        text: 'Uncaught Error.\n' + jqXHR.responseText
+                                    })
+                                }
+                            }
+                        });
+                }else{
+                    $('body').loading('stop');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Batal delete Data CCTV!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+                }
+
             })
         }else{
             Swal.fire({
