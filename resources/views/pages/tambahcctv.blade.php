@@ -133,9 +133,9 @@
                                 <label for="timezone">Timezone</label>
                                 <select class="form-control form-control-border select2bs4" id="timezone" style="width: 100%;">
                                     <option value="" selected>Pilih Timezone</option>
-                                    <option value="Asia/Jakarta">WIB</option>
-                                    <option value="Asia/Makassar">WIT</option>
-                                    <option value="Asia/Makassar">WITA</option>
+                                    <option value="WIB">WIB</option>
+                                    <option value="WIT">WIT</option>
+                                    <option value="WITA">WITA</option>
                                 </select>
                             </div>
                             <div class="form-group">
