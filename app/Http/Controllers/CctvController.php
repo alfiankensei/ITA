@@ -38,8 +38,8 @@ class CctvController extends Controller
                     ->addIndexColumn()
                     ->addColumn('aksi', function ($row) {
                         $actionBtn =
-                            '<button type="button" onClick="start_cctv(' . $row->id . ')" id="btnStart" class="btn btn-success" title="Start Service CCTV"><i class="fas fa-circle-play mr-2"></i></button>' .
-                            '<button type="button" onClick="stop_cctv(' . $row->id . ')" id="btnStop" class="btn btn-primary" title="Stop Service CCTV"><i class="fas fa-circle-stop mr-2"></i></button>' .
+                            '<button type="button" onClick="start_cctv(' . $row->id . ')" id="btnStart" class="btn btn-success" title="Start Service CCTV"><i class="fas fa-circle-play mr-2"></i></button> ' .
+                            '<button type="button" onClick="stop_cctv(' . $row->id . ')" id="btnStop" class="btn btn-primary" title="Stop Service CCTV"><i class="fas fa-circle-stop mr-2"></i></button> ' .
                             '<button type="button" onClick="hapus_cctv(' . $row->id . ')" id="btnHapus" class="btn btn-danger" title="Hapus CCTV"><i class="fas fa-trash mr-2"></i></button>';
                         return $actionBtn;
                     })
